@@ -1,3 +1,6 @@
 [submodule "purplish-project-frontend"]
 	path = purplish-project-frontend
 	url = https://github.com/alphatechnolog/purplish-project-frontend.git
+[submodule "purplish-project-items"]
+	path = purplish-project-items
+	url = https://github.com/alphatechnolog/purplish-project-items.git
