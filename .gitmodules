@@ -7,3 +7,6 @@
 [submodule "purplish-project-warehouses"]
 	path = purplish-project-warehouses
 	url = https://github.com/alphatechnolog/purplish-project-warehouses.git
+[submodule "purplish-project-kardex"]
+	path = purplish-project-kardex
+	url = https://github.com/alphatechnolog/purplish-project-kardex.git
