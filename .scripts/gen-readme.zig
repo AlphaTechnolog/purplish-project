@@ -156,8 +156,7 @@ const Config = struct {
     }
 
     pub const InputPopulateError = anyerror || error{
-        InputKeyNotFound,
-        InputValueNotFound,
+        InvalidKeyValuePair,
     };
 
     fn populateWithInput(allocator: std.mem.Allocator, config: *Config, current_section: *Section, input: []const u8) InputPopulateError!void {
