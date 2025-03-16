@@ -1,0 +1,12 @@
+project="Purplish Project - Warehouses"
+outfile="purplish-project-warehouses/README.md"
+description="Micro for the warehouses functionality"
+
+[setting_up]
+name="Setting up the project"
+description="Follow the next instructions to get the micro up and running"
+dependencies="sqlite3"
+dependencies="go"
+cmd_sequence="./.bin/run-migrations.sh"
+cmd_sequence="go mod tidy"
+cmd_sequence="PORT=8001 go run ."

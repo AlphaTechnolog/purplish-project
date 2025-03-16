@@ -1,0 +1,11 @@
+project="Purplish project"
+outfile="README.md"
+description="Repository which holds all the project subprojects"
+
+[setting_up]
+name="Setting up the projects"
+description="First clone all the submodules and follow their respective READMEs"
+dependencies="git"
+cmd_sequence="git clone https://github.com/alphatechnolog/purplish-project"
+cmd_sequence="cd purplish_project"
+cmd_sequence="git submodule update --init --recursive"

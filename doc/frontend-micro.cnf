@@ -1,0 +1,10 @@
+project="Purplish Project - Frontend"
+outfile="purplish-project-frontend/README.md"
+description="Main frontend application"
+
+[setting_up]
+name="Setting up the project"
+description="Follow the next instructions to get the micro up and running"
+dependencies="bun"
+cmd_sequence="bun install"
+cmd_sequence="bun run dev"
