@@ -99,11 +99,6 @@ fn fmtProject(allocator: mem.Allocator, module_folder: []const u8) !void {
 
     defer deallocateStringSlice(allocator, &folders);
 
-    // defer {
-    //     for (folders) |entry| allocator.free(entry);
-    //     allocator.free(folders);
-    // }
-
     for (folders) |folder| {
         var child = Child.init(&[_][]const u8{ "go", "fmt", folder }, allocator);
         child.cwd = module_folder;
