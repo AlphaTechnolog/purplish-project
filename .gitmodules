@@ -10,3 +10,6 @@
 [submodule "purplish-project-kardex"]
 	path = purplish-project-kardex
 	url = https://github.com/alphatechnolog/purplish-project-kardex.git
+[submodule "purplish-project-companies"]
+	path = purplish-project-companies
+	url = https://github.com/alphatechnolog/purplish-project-companies.git
