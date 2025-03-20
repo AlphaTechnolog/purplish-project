@@ -1,5 +1,5 @@
-// Why in zig? idk this is for fun anyways...
-// run with zig run <filename>.zig -- <docdir>
+// Why in zig? why not, also i already had the parser done
+// for fun previously so i just extended it and it was fun to write this anyways.
 
 const std = @import("std");
 
