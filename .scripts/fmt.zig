@@ -8,23 +8,45 @@ const mem = std.mem;
 const process = std.process;
 const debug = std.debug;
 const fs = std.fs;
+const posix = std.posix;
+const io = std.io;
 
 const ArrayList = std.ArrayList;
 const Child = process.Child;
 
-pub fn main() !void {
-    var dba = heap.DebugAllocator(.{}){};
-    defer if (dba.deinit() == .leak) debug.print("memleak detected\n", .{});
+const GLOB_STAR = "*";
+const VERBOSE = true;
 
-    const allocator = dba.allocator();
+fn deallocateStringSlice(allocator: mem.Allocator, slice: *const [][]u8) void {
+    for (slice.*) |element| allocator.free(element);
+    allocator.free(slice.*);
+}
 
-    var args = try process.argsWithAllocator(allocator);
-    defer args.deinit();
+fn getProjectModules(allocator: mem.Allocator) ![][]u8 {
+    var elements = ArrayList([]u8).init(allocator);
+    var dir = try fs.cwd().openDir(".", .{ .iterate = true });
+    defer dir.close();
 
-    _ = args.next();
+    var it = dir.iterate();
+    while (try it.next()) |entry| {
+        if (entry.kind != .directory) continue;
 
-    const module_folder = args.next() orelse return error.NoModule;
+        var opened_subdir = try dir.openDir(entry.name, .{ .iterate = true });
+        defer opened_subdir.close();
 
+        var subdir_it = opened_subdir.iterate();
+        while (try subdir_it.next()) |subentry| {
+            if (mem.eql(u8, subentry.name, "go.mod")) try elements.append(try allocator.dupe(
+                u8,
+                entry.name,
+            ));
+        }
+    }
+
+    return try elements.toOwnedSlice();
+}
+
+fn fmtProject(allocator: mem.Allocator, module_folder: []const u8) !void {
     const folders = list: {
         var result = ArrayList([]u8).init(allocator);
         var dir = try fs.cwd().openDir(module_folder, .{ .iterate = true });
@@ -33,7 +55,6 @@ pub fn main() !void {
         var walker = try dir.walk(allocator);
         defer walker.deinit();
 
-        // we should also format the main package files.
         try result.append(try allocator.dupe(u8, "."));
 
         while (try walker.next()) |entry| {
@@ -57,8 +78,6 @@ pub fn main() !void {
                                     const ext = element.name[idx + 1 .. element.name.len];
                                     if (mem.eql(u8, ext, "go")) break :has true;
                                 }
-
-                                continue;
                             }
                         }
                         break :has false;
@@ -68,7 +87,7 @@ pub fn main() !void {
 
                     try result.append(try fs.path.join(allocator, &[_][]const u8{
                         ".",
-                        entry.path
+                        entry.path,
                     }));
                 },
                 else => continue,
@@ -78,25 +97,67 @@ pub fn main() !void {
         break :list try result.toOwnedSlice();
     };
 
-    defer {
-        for (folders) |entry| allocator.free(entry);
-        allocator.free(folders);
-    }
+    defer deallocateStringSlice(allocator, &folders);
+
+    // defer {
+    //     for (folders) |entry| allocator.free(entry);
+    //     allocator.free(folders);
+    // }
 
     for (folders) |folder| {
-        var child = Child.init(&[_][]const u8{"go", "fmt", folder}, allocator);
+        var child = Child.init(&[_][]const u8{ "go", "fmt", folder }, allocator);
         child.cwd = module_folder;
 
-        debug.print("FMT: {s} at {s}\n", .{folder, module_folder});
+        if (VERBOSE == true) {
+            debug.print("FMT: {s} at {s}\n", .{
+                folder,
+                module_folder,
+            });
+        }
 
         try child.spawn();
         const term = try child.wait();
 
-        if (term.Exited == 1) {
-            debug.print("Failed to call 'go fmt {s}' at {s}\n", .{
+        if (term.Exited == 1 and VERBOSE == true) {
+            debug.print("Failed to call 'go fmt {s}' at '{s}'\n", .{
                 folder,
                 module_folder,
             });
         }
     }
+}
+
+pub fn main() !void {
+    var dba = heap.DebugAllocator(.{}){};
+    defer if (dba.deinit() == .leak) debug.print("memleak detected\n", .{});
+
+    const allocator = dba.allocator();
+
+    var args = try process.argsWithAllocator(allocator);
+    defer args.deinit();
+
+    _ = args.next();
+
+    const argument = args.next() orelse return error.NoModule;
+
+    if (mem.eql(u8, argument, GLOB_STAR)) {
+        const modules = getProjectModules(allocator) catch |err| {
+            const stderr = io.getStdErr().writer();
+            stderr.print("FATAL: Unable to scan for project modules: {s}\n", .{
+                @errorName(err),
+            }) catch unreachable;
+            posix.exit(1);
+        };
+
+        defer deallocateStringSlice(allocator, &modules);
+
+        for (modules) |module| {
+            if (VERBOSE == true) debug.print("** Entering project `{s}`\n", .{module});
+            try fmtProject(allocator, module);
+        }
+
+        return;
+    }
+
+    try fmtProject(allocator, argument);
 }
