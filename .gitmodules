@@ -16,3 +16,6 @@
 [submodule "purplish-project-currencies"]
 	path = purplish-project-currencies
 	url = https://github.com/alphatechnolog/purplish-project-currencies.git
+[submodule "purplish-project-memberships"]
+	path = purplish-project-memberships
+	url = https://github.com/alphatechnolog/purplish-project-memberships.git
