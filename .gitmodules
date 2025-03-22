@@ -19,3 +19,6 @@
 [submodule "purplish-project-memberships"]
 	path = purplish-project-memberships
 	url = https://github.com/alphatechnolog/purplish-project-memberships.git
+[submodule "purplish-project-auth"]
+	path = purplish-project-auth
+	url = https://github.com/alphatechnolog/purplish-project-auth.git
