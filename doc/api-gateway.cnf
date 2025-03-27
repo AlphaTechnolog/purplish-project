@@ -1,0 +1,10 @@
+project="Purplish Project - API Gateway"
+outfile="purplish-project-api-gateway/README.md"
+description="API Gateway Project"
+
+[setting_up]
+name="Setting up the project"
+description="Follow the next instructions to get the project up and running"
+dependencies="go"
+cmd_sequence="go mod tidy"
+cmd_sequence="PORT=3000 go run ."
