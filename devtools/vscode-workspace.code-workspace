@@ -1,0 +1,37 @@
+{
+	"folders": [
+		{
+			"path": "../purplish-project-api-gateway"
+		},
+		{
+			"path": "../purplish-project-auth"
+		},
+		{
+			"path": "../purplish-project-companies"
+		},
+		{
+			"path": "../purplish-project-currencies"
+		},
+		{
+			"path": "../purplish-project-frontend"
+		},
+		{
+			"path": "../purplish-project-items"
+		},
+		{
+			"path": "../purplish-project-kardex"
+		},
+		{
+			"path": "../purplish-project-memberships"
+		},
+		{
+			"path": "../purplish-project-warehouses"
+		}
+	],
+	"settings": {},
+	"extensions": {
+		"recommendations": [
+			"golang.go"
+		]
+	}
+}
