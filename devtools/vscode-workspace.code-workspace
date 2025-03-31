@@ -26,6 +26,9 @@
 		},
 		{
 			"path": "../purplish-project-warehouses"
+		},
+		{
+			"path": "../purplish-project-common"
 		}
 	],
 	"settings": {},

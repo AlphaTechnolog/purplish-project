@@ -25,3 +25,6 @@
 [submodule "purplish-project-api-gateway"]
 	path = purplish-project-api-gateway
 	url = https://github.com/alphatechnolog/purplish-project-api-gateway
+[submodule "purplish-project-common"]
+	path = purplish-project-common
+	url = https://github.com/alphatechnolog/purplish-project-common
