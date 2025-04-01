@@ -16,7 +16,7 @@ Make sure you have the next dependencies on the target system:
 
 Run the next commands on your system:
 
-```
+```sh
 git clone https://github.com/alphatechnolog/purplish-project
 cd purplish_project
 git submodule update --init --recursive

@@ -188,7 +188,7 @@ const Config = struct {
 
             if (sepindex) |idx| {
                 break :value .{
-                    .key = input[0 .. idx],
+                    .key = input[0..idx],
                     .value = input[idx + 1 .. input.len],
                 };
             }
@@ -336,7 +336,7 @@ fn genDoc(opts: *const struct {
         if (has_cmd_sequence) {
             try writer.print("\n\n### Deploying\n\n", .{});
             try writer.print("Run the next commands on your system:\n", .{});
-            try writer.print("\n```", .{});
+            try writer.print("\n```sh", .{});
         }
 
         while (cmd_sequence.next()) |cmd| {
@@ -388,7 +388,7 @@ pub fn main() !void {
         const dirname = args.next() orelse return error.MissingTemplates;
         break :folder fs.cwd().openDir(dirname, .{ .iterate = true }) catch |err| {
             switch (err) {
-                error.NotDir => die("it seems to be that '{s}' is not a dir\n", .{ dirname }),
+                error.NotDir => die("it seems to be that '{s}' is not a dir\n", .{dirname}),
                 else => return err,
             }
         };
