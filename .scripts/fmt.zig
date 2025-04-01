@@ -15,7 +15,22 @@ const ArrayList = std.ArrayList;
 const Child = process.Child;
 
 const GLOB_STAR = "*";
-const VERBOSE = true;
+
+const Verbosity = enum {
+    none,
+    info,
+    err,
+
+    pub fn isInfo(self: Verbosity) bool {
+        return self == .info or self == .err;
+    }
+
+    pub fn isErr(self: Verbosity) bool {
+        return self == .err;
+    }
+};
+
+const VERBOSITY: Verbosity = .info;
 
 fn deallocateStringSlice(allocator: mem.Allocator, slice: *const [][]u8) void {
     for (slice.*) |element| allocator.free(element);
@@ -103,7 +118,7 @@ fn fmtProject(allocator: mem.Allocator, module_folder: []const u8) !void {
         var child = Child.init(&[_][]const u8{ "go", "fmt", folder }, allocator);
         child.cwd = module_folder;
 
-        if (VERBOSE == true) {
+        if (VERBOSITY.isInfo()) {
             debug.print("FMT: {s} at {s}\n", .{
                 folder,
                 module_folder,
@@ -113,7 +128,7 @@ fn fmtProject(allocator: mem.Allocator, module_folder: []const u8) !void {
         try child.spawn();
         const term = try child.wait();
 
-        if (term.Exited == 1 and VERBOSE == true) {
+        if (VERBOSITY.isErr() and term.Exited == 1) {
             debug.print("Failed to call 'go fmt {s}' at '{s}'\n", .{
                 folder,
                 module_folder,
@@ -147,7 +162,7 @@ pub fn main() !void {
         defer deallocateStringSlice(allocator, &modules);
 
         for (modules) |module| {
-            if (VERBOSE == true) debug.print("** Entering project `{s}`\n", .{module});
+            if (VERBOSITY.isInfo()) debug.print("** Entering project `{s}`\n", .{module});
             try fmtProject(allocator, module);
         }
 
