@@ -1,5 +1,10 @@
 # Purplish project
 
+> [!NOTE]
+> This is a project for an inventory system written with microservices in golang.
+>
+> Note that this is a pretty much a work in progress and that i'm still rewriting and writing new microservices to complete functionality
+
 Repository which holds all the project subprojects
 
 ## Setting up the projects
